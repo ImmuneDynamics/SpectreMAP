@@ -1,5 +1,5 @@
 # SpectreMAP
-An extension of the 'Spectre' package (https://github.com/sydneycytometry/Spectre) for spatial analysis of high-dimensional imaging data.
+An extension of the 'Spectre' package (https://github.com/ImmuneDynamics/Spectre) for spatial analysis of high-dimensional imaging data.
 
 ### Current version
 `v0.2.2`
