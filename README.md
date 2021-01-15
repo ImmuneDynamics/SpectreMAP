@@ -21,8 +21,8 @@ library('devtools')
 Subsequently, use the 'install_github' function to install and load the Spectre and SpectreMAP packages. By default this will load the 'master' branch, which is the same as the latest stable release version. To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
-    install_github("sydneycytometry/spectre")
-    install_github("tomashhurst/SpectreMAP")
+    install_github("immunedynamics/spectre")
+    install_github("immunedynamics/SpectreMAP")
 ```
 
 Next install the additional packages.
