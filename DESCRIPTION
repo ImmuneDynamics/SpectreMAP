@@ -19,5 +19,6 @@ Imports:
     gridExtra,
     raster,
     tiff,
-    rgeos
+    rgeos,
+    qs
 RoxygenNote: 7.1.1
