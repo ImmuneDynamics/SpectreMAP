@@ -59,8 +59,8 @@
           spatial.dat[[i]]$DATA$CellData$Region <- "Total"
         }
 
-        area.table <- do.calculate.area(spatial.dat, region = 'Region')
-        area.table
+        # area.table <- do.calculate.area(spatial.dat, region = 'Region')
+        # area.table
 
         area.table <- data.frame('ROI' = names(spatial.dat), 'Total' = rep(500, length(names(spatial.dat))))
         area.table <- as.data.table(area.table)
@@ -151,6 +151,8 @@
 
         reg.dat.z <- do.zscore(reg.dat, use.cols = to.plot)
         reg.dat.z
+        
+        to.plot <- paste0(to.plot, '_zscore')
 
         # names(reg.dat.z) <- gsub("Cells per region", "", names(reg.dat.z))
         # names(reg.dat.z) <- gsub("Cells per 100 um^2 of region", "", names(reg.dat.z))
@@ -159,7 +161,14 @@
 
         as.matrix(names(reg.dat.z))
 
-        make.pheatmap(reg.dat.z, sample.col = 'ROI', plot.cols = to.plot, is.fold = TRUE, cutree_rows = 4, cutree_cols = 3)
+        make.pheatmap(reg.dat.z, 
+                      sample.col = 'ROI', 
+                      plot.cols = to.plot, 
+                      is.fold = TRUE, 
+                      dendrograms = 'column',
+                      row.sep = 2,
+                      #cutree_rows = 4, 
+                      cutree_cols = 3)
 
     ### AutoGraphs
 
