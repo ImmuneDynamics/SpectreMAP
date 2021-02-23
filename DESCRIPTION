@@ -20,5 +20,9 @@ Imports:
     raster,
     tiff,
     rgeos,
+    tidyr,
+    sp,
+    sf,
+    stars
     qs
 RoxygenNote: 7.1.1
