@@ -19,6 +19,7 @@ do.create.outlines <- function(spatial.dat,
       require(rgeos)
       require(tidyr)
       require(ggplot2)
+      require(dplyr)
 
       # polygons.name <- paste0(mask.name, "_polygons")
       # outlines.name <- paste0(mask.name, "_outlines")
