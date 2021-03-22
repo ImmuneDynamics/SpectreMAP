@@ -23,6 +23,6 @@ Imports:
     tidyr,
     sp,
     sf,
-    stars
-    qs
+    stars,
+    qs,
 RoxygenNote: 7.1.1
