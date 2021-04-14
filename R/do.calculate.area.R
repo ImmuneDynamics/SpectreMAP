@@ -5,7 +5,7 @@
 #' @export
 
 do.calculate.area <- function(dat,
-                              region){
+                              region = NULL){
   
   ### Setup
   
@@ -21,14 +21,31 @@ do.calculate.area <- function(dat,
   area.list <- list()
   
   for(i in roi.names){
-    # i <- 8
+    # i <- roi.names[[1]]
+
+    ## If region masks are present
+        if(!is.null(region)){
+          poly.names <- dat[[i]]$MASKS[[region]]$polygons@data
+          areas <- area(dat[[i]]$MASKS[[region]]$polygons)
+          
+          areas <- as.data.table(t(areas))
+          names(areas) <- as.character(poly.names[[1]])
+          
+          total.area <- sqrt(dim(dat[[i]]$RASTERS[[1]])[1] * dim(dat[[i]]$RASTERS[[1]])[2])
+          total.area <- as.data.table(total.area)
+          names(total.area) <- 'Total'
+          areas <- rbind(areas, total.area)
+          area.list[[i]] <- areas
+        }
     
-    poly.names <- dat[[i]]$MASKS[[region]]$polygons@data
-    areas <- area(dat[[i]]$MASKS[[region]]$polygons)
-    
-    areas <- as.data.table(t(areas))
-    names(areas) <- as.character(poly.names[[1]])
-    area.list[[i]] <- areas
+    ## If region masks are NOT present
+        if(is.null(region)){
+          total.area <- sqrt(dim(dat[[i]]$RASTERS[[1]])[1] * dim(dat[[i]]$RASTERS[[1]])[2])
+          total.area <- as.data.table(total.area)
+          
+          names(total.area) <- 'Total'
+          area.list[[i]] <- total.area
+        }
   }
   
   area.list

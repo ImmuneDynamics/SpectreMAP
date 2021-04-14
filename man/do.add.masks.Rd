@@ -9,10 +9,11 @@ do.add.masks(
   mask.loc,
   masks,
   mask.label = "cell_mask",
+  mask.ext = "_mask.tiff",
   correct.extent = TRUE,
   flip.y = TRUE,
   value.modifier = 65535,
-  mask.ext = "_mask.tiff"
+  array = FALSE
 )
 }
 \description{

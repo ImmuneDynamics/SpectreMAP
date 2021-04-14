@@ -6,18 +6,8 @@
         library(Spectre)
         library(SpectreMAP)
 
-        package.check()
-        package.load()
-
-        library('tiff') # for reading tiffs
-        library('raster') # managing images as rasters
-        library('rgeos') # spatial functions
-        library('rgdal') # spatial functions
-        library('tidyr') # to use the 'gather' function
-        library('sp') # spatial functions (in particular, for fast creation of polygons)
-        library('sf') # spatial functions (in particular, for fast creation of polygons)
-        library('stars') # spatial functions (in particular, for fast creation of polygons)
-        library('velox') # fast creation of 'single cell' data
+        package.check('spatial')
+        package.load('spatial')
 
     ### Set PrimaryDirectory
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -33,80 +23,64 @@
         OutputDirectory <- getwd()
 
 ###################################################################################
-### Read in TIFF channel images
-###################################################################################
-
-    ### Read TIFF files into spatial.dat object
-
-        setwd(PrimaryDirectory)
-        setwd("ROIs/")
-
-        rois <- list.dirs(getwd(), full.names = FALSE, recursive = FALSE)
-        as.matrix(rois)
-
-        spatial.dat <- SpectreMAP::read.spatial.files(roi.loc = getwd(), rois = rois)
-
-    ### Check the spatial data object
-
-        as.matrix(names(spatial.dat)) # ROI names
-
-        str(spatial.dat, 3) # shows the structure
-
-        as.matrix(names(spatial.dat[[1]]$RASTERS)) # TIFF names of first ROI
-
-###################################################################################
-### Read in masks
-###################################################################################
-
-    ### Setup to read masks
-
-        setwd(PrimaryDirectory)
-        setwd("Masks")
-
-        list.files()
-
-        mask.ext <- "_ilastik_s2_Probabilities_mask.tiff"
-
-        masks <- list.files(pattern = mask.ext)
-        masks
-
-    ### Read in masks and add to spatial.dat
-
-        spatial.dat <- do.add.masks(spatial.dat = spatial.dat,
-                                    mask.loc = getwd(),
-                                    masks = masks,
-                                    mask.ext = mask.ext,
-                                    mask.label = "cell_mask")
-
-    ### Review
-
-        str(spatial.dat, 3) # shows the structure
-
-###################################################################################
-### Create mask outlines/polygons and calculate cellular data
-###################################################################################
-
-    ### Review mask names
-        names(spatial.dat[[1]]$MASKS)
-
-    ### Calculate polygons and outlines for each mask object
-        spatial.dat <- do.create.outlines(spatial.dat = spatial.dat,
-                                          mask.name = "cell_mask")
-
-        str(spatial.dat, 3)
-        str(spatial.dat[[1]]$MASKS$cell_mask, 1)
-
-        spatial.dat[[1]]$MASKS$cell_mask$polygons@data
-
-        plot(spatial.dat[[1]]$MASKS$cell_mask$polygons)
-
-###################################################################################
 ### Extract 'cellular' data using masks
 ###################################################################################
 
+    ### Load demo data
+        
+        spatial.dat <- SpectreMAP::demo.spatial
+        # spatial.dat <- demo.spatial
+        
+        str(spatial.dat, 3)
+        
+    ### Remove calculated components for the purpose of the demo
+        
+        for(i in names(spatial.dat)){
+            spatial.dat[[i]]$MASKS$cell.mask$polygons <- NULL
+            spatial.dat[[i]]$MASKS$cell.mask$outlines <- NULL
+            spatial.dat[[i]]$MASKS$cell.mask$centroids <- NULL
+            
+            spatial.dat[[i]]$MASKS$cell.type$polygons <- NULL
+            spatial.dat[[i]]$MASKS$cell.type$outlines <- NULL
+            spatial.dat[[i]]$MASKS$cell.type$centroids <- NULL
+            
+            spatial.dat[[i]]$DATA <- NULL
+        }
+        
+    ### Review demo datq
+        
+        str(spatial.dat, 3)
+        str(spatial.dat[[1]]$MASKS, 3)
+        
+###################################################################################
+### Calculate polygons and outlines from mask rasters
+###################################################################################        
+        
+    ### Create polygons, outlines, and centroids
+        
+        str(spatial.dat[[1]]$MASKS, 2)
+        
+        spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = "cell.mask")
+        
+        str(spatial.dat[[1]]$MASKS, 2)
+        
+        spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = "cell.type")
+        
+        str(spatial.dat[[1]]$MASKS, 2)
+        
+    ### Make some plots
+        
+        
+        
+        
+        
+###################################################################################
+### Calculate 'cellular' data from masks
+###################################################################################   
+        
     ### Calculate cellular data
 
-        spatial.dat <- do.extract(dat = spatial.dat, mask = "cell_mask", name = "CellData", fun = "mean")
+        spatial.dat <- do.extract(dat = spatial.dat, mask = "cell.mask", name = "CellData", fun = "mean")
 
         str(spatial.dat, 3)
         spatial.dat[[1]]$DATA
