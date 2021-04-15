@@ -12,19 +12,28 @@ do.extract <- function(dat, # spatial.data object
 
   #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
-      require(rgeos)
-      require(sp)
-      require(rgdal)
-      require('velox')
-      require(data.table)
+      require('rgeos')
+      require('sp')
+      require('rgdal')
+      require('exactextractr')
+      require('data.table')
 
   ### Demo data
 
+      # spatial.dat <- demo.spatial
+      # str(spatial.dat, 3)
+      # 
+      # for(i in names(spatial.dat)){
+      #   spatial.dat[[i]]$DATA <- NULL
+      # }
+      # 
+      # str(spatial.dat, 3)
+      # 
       # dat <- spatial.dat
-      # mask <- "cell_mask"
+      # mask <- "cell.mask"
       # name = "CellData"
       # fun = "mean"
-      #
+      # 
       # str(dat, 4)
 
   ### Loop for each ROI
@@ -57,6 +66,7 @@ do.extract <- function(dat, # spatial.data object
               temp.dat <- roi.stack[[i]]
 
               ## Slower method
+              
                   # extracted.dat <- raster::extract(x = temp.dat, y = roi.poly, df = TRUE) # this is the time consuming step
                   # extracted.dat.res <- aggregate(. ~ID, data = extracted.dat, FUN = fun)
                   # # #colnames(extracted.dat.res)[2] <- i # should we be removing .tiff here? If we do should be the same in the other read.spatial function, to ensure matching consistency
@@ -64,10 +74,15 @@ do.extract <- function(dat, # spatial.data object
                   # ply.centroids.df <- cbind(ply.centroids.df, extracted.dat.res[2]) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
 
               ## FAST method
+              
                   ## Faster options
-                  vx <- velox(temp.dat)
-                  res <- vx$extract(sp=roi.poly, fun=mean) # 3293 polygons #3294?
+
+                  # vx <- velox(temp.dat)
+                  # res <- vx$extract(sp=roi.poly, fun=mean) # 3293 polygons #3294?
+                  
+                  res <- exactextractr::exact_extract(temp.dat, st_as_sf(roi.poly), fun=fun)
                   res <- as.data.table(res)
+                  
                   names(res) <- i
                   ply.centroids.df <- cbind(ply.centroids.df, res) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
             }
