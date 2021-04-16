@@ -102,7 +102,7 @@
         regions <- do.list.switch(regions)
         names(regions) <- c("Values", "Region")
         regions
-        
+
         cell.dat <- do.add.cols(cell.dat, base.col = 'region', add.dat = regions, add.by = 'Values')
         cell.dat
         
