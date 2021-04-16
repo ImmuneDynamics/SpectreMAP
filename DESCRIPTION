@@ -25,4 +25,5 @@ Imports:
     sf,
     stars,
     qs,
+    exactextractr,
 RoxygenNote: 7.1.1
