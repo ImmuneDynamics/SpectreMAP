@@ -66,7 +66,7 @@ do.extract <- function(dat, # spatial.data object
               temp.dat <- roi.stack[[i]]
 
               ## Slower method
-              
+
                   # extracted.dat <- raster::extract(x = temp.dat, y = roi.poly, df = TRUE) # this is the time consuming step
                   # extracted.dat.res <- aggregate(. ~ID, data = extracted.dat, FUN = fun)
                   # # #colnames(extracted.dat.res)[2] <- i # should we be removing .tiff here? If we do should be the same in the other read.spatial function, to ensure matching consistency
